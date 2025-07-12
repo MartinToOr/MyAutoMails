@@ -71,6 +71,20 @@ function initDark() {
   }
 }
 
+async function checkSession(redirect) {
+  try {
+    const res = await fetch('/api/auth/session');
+    const data = await res.json();
+    if (!data.user && redirect) {
+      window.location.href = '/index.html';
+    }
+    return data.user;
+  } catch (e) {
+    if (redirect) window.location.href = '/index.html';
+    return null;
+  }
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   initLang();
   initDark();
