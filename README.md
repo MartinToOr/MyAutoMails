@@ -9,3 +9,7 @@ Simple web app for scheduling OpenAI-powered scripts and emailing the results.
 4. Start the server with `npm start`.
 
 The scheduler checks every minute for scripts whose `next_execution` is due and sends the generated response to the configured email addresses.
+
+## Usage
+Visit `http://localhost:3000/` to log in. New users can register at `/register.html`.
+Passwords are hashed using bcrypt before being stored in MySQL.
