@@ -4,8 +4,8 @@ Simple web app for scheduling OpenAI-powered scripts and emailing the results.
 
 ## Setup
 1. Install dependencies with `npm install` (requires internet access).
-2. Create a MySQL database and run `schema.sql`.
-3. Configure environment variables for database, SMTP and OpenAI API keys.
+2. Create a PostgreSQL database and run `schema.sql`.
+3. Configure environment variables for the database (set `DB_URL`), SMTP and OpenAI API keys.
 4. Start the server with `npm start`.
 
 

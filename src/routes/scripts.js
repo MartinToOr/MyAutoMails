@@ -4,7 +4,7 @@ const router = express.Router();
 
 router.get('/', async (req, res) => {
   try {
-    const [rows] = await pool.query('SELECT * FROM scripts');
+    const { rows } = await pool.query('SELECT * FROM scripts');
     res.json(rows);
   } catch (err) {
     console.error(err);
@@ -16,7 +16,7 @@ router.post('/', async (req, res) => {
   const { user_id, script, period, next_execution, emails } = req.body;
   try {
     await pool.query(
-      'INSERT INTO scripts(user_id, script, period, next_execution, emails) VALUES (?, ?, ?, ?, ?)',
+      'INSERT INTO scripts(user_id, script, period, next_execution, emails) VALUES ($1, $2, $3, $4, $5)',
       [user_id, script, period, next_execution, emails]
     );
     res.status(201).json({ message: 'Script created' });

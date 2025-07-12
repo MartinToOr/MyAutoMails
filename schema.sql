@@ -1,5 +1,5 @@
 CREATE TABLE users (
-  id INT AUTO_INCREMENT PRIMARY KEY,
+  id SERIAL PRIMARY KEY,
   name VARCHAR(100) NOT NULL,
   email VARCHAR(255) NOT NULL UNIQUE,
   password VARCHAR(255) NOT NULL,
@@ -7,11 +7,10 @@ CREATE TABLE users (
 );
 
 CREATE TABLE scripts (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  user_id INT NOT NULL,
+  id SERIAL PRIMARY KEY,
+  user_id INTEGER NOT NULL REFERENCES users(id),
   script TEXT NOT NULL,
-  period INT NOT NULL,
-  next_execution DATETIME NOT NULL,
-  emails VARCHAR(255) NOT NULL,
-  FOREIGN KEY (user_id) REFERENCES users(id)
+  period INTEGER NOT NULL,
+  next_execution TIMESTAMP NOT NULL,
+  emails VARCHAR(255) NOT NULL
 );
