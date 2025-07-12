@@ -1,0 +1,17 @@
+CREATE TABLE users (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(100) NOT NULL,
+  email VARCHAR(255) NOT NULL UNIQUE,
+  password VARCHAR(255) NOT NULL,
+  plan VARCHAR(50) DEFAULT 'free'
+);
+
+CREATE TABLE scripts (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  user_id INT NOT NULL,
+  script TEXT NOT NULL,
+  period INT NOT NULL,
+  next_execution DATETIME NOT NULL,
+  emails VARCHAR(255) NOT NULL,
+  FOREIGN KEY (user_id) REFERENCES users(id)
+);
