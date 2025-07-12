@@ -1,0 +1,22 @@
+{
+  "name": "myautomails",
+  "version": "1.0.0",
+  "description": "User script scheduling web app",
+  "main": "src/app.js",
+  "scripts": {
+    "start": "node src/app.js",
+    "test": "node test.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "express": "^4.18.2",
+    "mysql2": "^3.8.0",
+    "node-cron": "^3.0.3",
+    "nodemailer": "^6.9.8",
+    "openai": "^4.30.0",
+    "bcryptjs": "^2.4.3"
+  }
+}
