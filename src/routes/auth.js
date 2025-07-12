@@ -7,7 +7,10 @@ router.post('/register', async (req, res) => {
   const { name, email, password, plan } = req.body;
   try {
     const hash = await bcrypt.hash(password, 10);
-    await pool.query('INSERT INTO users(name, email, password, plan) VALUES (?, ?, ?, ?)', [name, email, hash, plan]);
+    await pool.query(
+      'INSERT INTO users(name, email, password, plan) VALUES ($1, $2, $3, $4)',
+      [name, email, hash, plan]
+    );
     res.status(201).json({ message: 'User registered' });
   } catch (err) {
     console.error(err);
@@ -18,7 +21,7 @@ router.post('/register', async (req, res) => {
 router.post('/login', async (req, res) => {
   const { email, password } = req.body;
   try {
-    const [rows] = await pool.query('SELECT * FROM users WHERE email = ?', [email]);
+    const { rows } = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
     if (!rows.length) return res.status(401).json({ error: 'Invalid credentials' });
     const user = rows[0];
     const match = await bcrypt.compare(password, user.password);

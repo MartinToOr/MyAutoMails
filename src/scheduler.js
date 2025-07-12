@@ -19,7 +19,7 @@ const transporter = nodemailer.createTransport({
 
 async function checkScripts() {
   try {
-    const [rows] = await pool.query('SELECT * FROM scripts WHERE next_execution <= NOW()');
+    const { rows } = await pool.query('SELECT * FROM scripts WHERE next_execution <= NOW()');
     for (const script of rows) {
       const completion = await openai.chat.completions.create({
         model: 'gpt-3.5-turbo',
@@ -32,7 +32,10 @@ async function checkScripts() {
         subject: 'Script result',
         text: answer,
       });
-      await pool.query('UPDATE scripts SET next_execution = DATE_ADD(next_execution, INTERVAL period HOUR) WHERE id = ?', [script.id]);
+      await pool.query(
+        'UPDATE scripts SET next_execution = next_execution + (period * interval \'1 hour\') WHERE id = $1',
+        [script.id]
+      );
     }
   } catch (err) {
     console.error('Scheduler error', err);
