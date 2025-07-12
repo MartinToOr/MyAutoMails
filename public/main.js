@@ -12,7 +12,16 @@ const translations = {
     dashboardTitle: 'Dashboard',
     welcome: 'Welcome',
     manageScripts: 'Manage Scripts',
-    logout: 'Logout'
+    logout: 'Logout',
+    createScript: 'Create Script',
+    script: 'Script',
+    frequency: 'Frequency',
+    daily: 'Daily',
+    weekly: 'Weekly',
+    monthly: 'Monthly',
+    hour: 'Hour',
+    emails: 'Emails',
+    create: 'Create'
   },
   es: {
     login: 'Iniciar sesión',
@@ -27,7 +36,16 @@ const translations = {
     dashboardTitle: 'Panel',
     welcome: 'Bienvenido',
     manageScripts: 'Gestionar Scripts',
-    logout: 'Cerrar sesión'
+    logout: 'Cerrar sesión',
+    createScript: 'Crear Script',
+    script: 'Script',
+    frequency: 'Frecuencia',
+    daily: 'Diario',
+    weekly: 'Semanal',
+    monthly: 'Mensual',
+    hour: 'Hora',
+    emails: 'Correos',
+    create: 'Crear'
   }
 };
 
