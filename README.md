@@ -15,5 +15,3 @@ being stored. Login is available at `/index.html`.
 The scheduler checks every minute for scripts whose `next_execution` is due and
 sends the generated response to the configured email addresses.
 
-The scheduler checks every minute for scripts whose `next_execution` is due and sends the generated response to the configured email addresses.
-
