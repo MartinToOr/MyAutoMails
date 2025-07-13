@@ -22,10 +22,25 @@ const translations = {
     hour: 'Hour',
     emails: 'Emails',
 
+    continue: 'Continue',
+    select: 'Select',
+    freeLimit: '300 char input',
+    freeOutput: '500 char output',
+    proLimit: '600 char input',
+    proOutput: 'Unlimited output',
+    profile: 'Profile',
+    save: 'Save',
+    currentPassword: 'Current password',
+    newPassword: 'New password',
+    deleteAccount: 'Delete account',
+
     create: 'Create',
     myScripts: 'My Scripts',
     update: 'Update',
-    noScripts: 'No scripts found'
+    noScripts: 'No scripts found',
+    history: 'History',
+    noHistory: 'No history',
+    test: 'Test'
 
   },
   es: {
@@ -51,10 +66,25 @@ const translations = {
     hour: 'Hora',
     emails: 'Correos',
 
+    continue: 'Continuar',
+    select: 'Seleccionar',
+    freeLimit: '300 caracteres de entrada',
+    freeOutput: '500 caracteres de salida',
+    proLimit: '600 caracteres de entrada',
+    proOutput: 'Sin límite de salida',
+    profile: 'Perfil',
+    save: 'Guardar',
+    currentPassword: 'Contraseña actual',
+    newPassword: 'Nueva contraseña',
+    deleteAccount: 'Eliminar cuenta',
+
     create: 'Crear',
     myScripts: 'Mis Scripts',
     update: 'Actualizar',
-    noScripts: 'No hay scripts'
+    noScripts: 'No hay scripts',
+    history: 'Historial',
+    noHistory: 'Sin historial',
+    test: 'Probar'
 
   }
 };
@@ -99,6 +129,16 @@ function initDark() {
   }
 }
 
+function initSidebar() {
+  const sidebar = document.getElementById('sidebar');
+  const toggle = document.getElementById('menuToggle');
+  if (sidebar && toggle) {
+    toggle.addEventListener('click', () => {
+      sidebar.classList.toggle('open');
+    });
+  }
+}
+
 async function checkSession(redirect) {
   try {
     const res = await fetch('/api/auth/session');
@@ -116,4 +156,5 @@ async function checkSession(redirect) {
 document.addEventListener('DOMContentLoaded', () => {
   initLang();
   initDark();
+  initSidebar();
 });

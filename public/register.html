@@ -20,38 +20,74 @@
   </header>
   <h1 data-i18n="register" class="mb-4">Register</h1>
   <form id="registerForm">
-    <div class="mb-3">
-      <label for="name" class="form-label" data-i18n="name">Name</label>
-      <input type="text" class="form-control" id="name" required>
+    <div id="formStep">
+      <div class="mb-3">
+        <label for="name" class="form-label" data-i18n="name">Name</label>
+        <input type="text" class="form-control" id="name" required>
+      </div>
+      <div class="mb-3">
+        <label for="email" class="form-label" data-i18n="email">Email</label>
+        <input type="email" class="form-control" id="email" required>
+      </div>
+      <div class="mb-3">
+        <label for="password" class="form-label" data-i18n="password">Password</label>
+        <input type="password" class="form-control" id="password" required>
+      </div>
+      <button type="submit" class="btn btn-primary" data-i18n="continue">Continue</button>
+      <a href="/index.html" class="btn btn-link" data-i18n="haveAccount">Already have an account?</a>
     </div>
-    <div class="mb-3">
-      <label for="email" class="form-label" data-i18n="email">Email</label>
-      <input type="email" class="form-control" id="email" required>
+    <div id="planStep" class="d-none row mt-4">
+      <div class="col-md-6 mb-3">
+        <div class="border p-3 h-100 text-center">
+          <h2 data-i18n="free">Free</h2>
+          <ul class="list-unstyled">
+            <li data-i18n="freeLimit">300 char input</li>
+            <li data-i18n="freeOutput">500 char output</li>
+          </ul>
+          <button type="button" id="selectFree" class="btn btn-primary" data-plan="free" data-i18n="select">Select</button>
+        </div>
+      </div>
+      <div class="col-md-6 mb-3">
+        <div class="border p-3 h-100 text-center">
+          <h2 data-i18n="pro">Pro</h2>
+          <div id="price" class="mb-2"></div>
+          <ul class="list-unstyled">
+            <li data-i18n="proLimit">600 char input</li>
+            <li data-i18n="proOutput">Unlimited output</li>
+          </ul>
+          <button type="button" id="selectPro" class="btn btn-primary" data-plan="pro" data-i18n="select">Select</button>
+        </div>
+      </div>
     </div>
-    <div class="mb-3">
-      <label for="password" class="form-label" data-i18n="password">Password</label>
-      <input type="password" class="form-control" id="password" required>
-    </div>
-    <div class="mb-3">
-      <label for="plan" class="form-label" data-i18n="plan">Plan</label>
-      <select id="plan" class="form-select">
-        <option value="free" data-i18n="free">Free</option>
-        <option value="pro" data-i18n="pro">Pro</option>
-      </select>
-    </div>
-    <button type="submit" class="btn btn-primary" data-i18n="register">Register</button>
-    <a href="/index.html" class="btn btn-link" data-i18n="haveAccount">Already have an account?</a>
   </form>
   <div id="message"></div>
   <script src="main.js"></script>
   <script>
     checkSession(false).then(user => {
-      if (user) {
-        window.location.href = '/dashboard.html';
+      if (user) window.location.href = '/dashboard.html';
+    });
+
+    const form = document.getElementById('registerForm');
+    const formStep = document.getElementById('formStep');
+    const planStep = document.getElementById('planStep');
+    const priceEl = document.getElementById('price');
+
+    function showPrice() {
+      const locale = navigator.language.startsWith('es') ? 'es-ES' : 'en-US';
+      const currency = locale === 'es-ES' ? 'EUR' : 'USD';
+      priceEl.textContent = new Intl.NumberFormat(locale, { style: 'currency', currency }).format(2.99) + '/month';
+    }
+
+    form.addEventListener('submit', e => {
+      e.preventDefault();
+      if (planStep.classList.contains('d-none')) {
+        formStep.classList.add('d-none');
+        planStep.classList.remove('d-none');
+        showPrice();
       }
     });
-    document.getElementById('registerForm').addEventListener('submit', async (e) => {
-      e.preventDefault();
+
+    async function sendRegistration(plan) {
       const res = await fetch('/api/auth/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -59,7 +95,7 @@
           name: document.getElementById('name').value,
           email: document.getElementById('email').value,
           password: document.getElementById('password').value,
-          plan: document.getElementById('plan').value,
+          plan
         })
       });
       const data = await res.json();
@@ -69,8 +105,13 @@
         window.location.href = '/dashboard.html';
       } else {
         msg.textContent = data.error;
+        formStep.classList.remove('d-none');
+        planStep.classList.add('d-none');
       }
-    });
+    }
+
+    document.getElementById('selectFree').addEventListener('click', () => sendRegistration('free'));
+    document.getElementById('selectPro').addEventListener('click', () => sendRegistration('pro'));
   </script>
 </body>
 </html>
