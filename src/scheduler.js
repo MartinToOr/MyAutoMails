@@ -35,7 +35,7 @@ async function checkScripts() {
         { role: 'user', content: script.script },
       ];
       const completion = await openai.chat.completions.create({
-        model: 'gpt-3.5-turbo',
+        model: 'gpt-4o-mini-realtime-preview',
         messages,
       });
       let answer = completion.choices[0].message.content;
