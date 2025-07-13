@@ -21,10 +21,12 @@ const translations = {
     monthly: 'Monthly',
     hour: 'Hour',
     emails: 'Emails',
+
     create: 'Create',
     myScripts: 'My Scripts',
     update: 'Update',
     noScripts: 'No scripts found'
+
   },
   es: {
     login: 'Iniciar sesión',
@@ -48,10 +50,12 @@ const translations = {
     monthly: 'Mensual',
     hour: 'Hora',
     emails: 'Correos',
+
     create: 'Crear',
     myScripts: 'Mis Scripts',
     update: 'Actualizar',
     noScripts: 'No hay scripts'
+
   }
 };
 

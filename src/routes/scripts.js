@@ -19,13 +19,17 @@ router.get('/', async (req, res) => {
 });
 
 router.post('/', async (req, res) => {
+
   const { script, frequency, hour, minute, emails } = req.body;
+
   const userId = req.session.user.id;
   const periods = { daily: 24, weekly: 24 * 7, monthly: 24 * 30 };
   const period = periods[frequency] || 24;
   const now = new Date();
   let next = new Date();
+
   next.setHours(hour, minute || 0, 0, 0);
+
   if (next <= now) {
     if (frequency === 'daily') next.setDate(next.getDate() + 1);
     else if (frequency === 'weekly') next.setDate(next.getDate() + 7);
