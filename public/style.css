@@ -1,15 +1,20 @@
 :root {
-  --bg-color: #ffffff;
+  --bg-color: #f6f8ff;
   --text-color: #000000;
   --primary-color: #0d6efd;
+
   --accent-color: #0080ff;
 }
 
 body {
   background-color: var(--bg-color);
+
   color: var(--text-color);
   font-family: Arial, sans-serif;
   transition: background-color 0.3s ease, color 0.3s ease;
+}
+.dark body {
+  background: linear-gradient(135deg, #1a1a2e, #000000);
 }
 
 header {
@@ -24,7 +29,7 @@ header img {
 }
 
 .dark {
-  --bg-color: #000000;
+  --bg-color: #0b0b0f;
   --text-color: #ffffff;
 }
 
@@ -60,22 +65,26 @@ details summary {
   margin-bottom: 0.5rem;
 }
 
+
 /* sidebar */
 #sidebar {
   position: fixed;
   top: 0;
   left: 0;
   bottom: 0;
+
   width: 200px;
   padding: 1rem;
   background-color: var(--bg-color);
   border-right: 1px solid #ccc;
+
   transform: translateX(-220px);
   transition: transform 0.3s ease;
   z-index: 1000;
 }
 #sidebar.open {
   transform: translateX(0);
+
 }
 #sidebar a {
   display: block;
