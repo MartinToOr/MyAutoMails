@@ -18,9 +18,11 @@ const transporter = nodemailer.createTransport({
 });
 
 async function checkScripts() {
+  console.log('Scheduler tick', new Date().toISOString());
   try {
     const { rows } = await pool.query('SELECT * FROM scripts WHERE next_execution <= NOW()');
     for (const script of rows) {
+      console.log('Running script', script.id);
       const completion = await openai.chat.completions.create({
         model: 'gpt-3.5-turbo',
         messages: [{ role: 'user', content: script.script }],

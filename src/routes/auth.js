@@ -11,7 +11,10 @@ router.post('/register', async (req, res) => {
       'INSERT INTO users(name, email, password, plan) VALUES ($1, $2, $3, $4)',
       [name, email, hash, plan]
     );
-    res.status(201).json({ message: 'User registered' });
+    const { rows } = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
+    const user = rows[0];
+    req.session.user = { id: user.id, name: user.name, plan: user.plan };
+    res.status(201).json({ message: 'User registered', user: req.session.user });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'DB error' });
@@ -26,11 +29,22 @@ router.post('/login', async (req, res) => {
     const user = rows[0];
     const match = await bcrypt.compare(password, user.password);
     if (!match) return res.status(401).json({ error: 'Invalid credentials' });
-    res.json({ message: 'Login successful', user: { id: user.id, name: user.name, plan: user.plan } });
+    req.session.user = { id: user.id, name: user.name, plan: user.plan };
+    res.json({ message: 'Login successful', user: req.session.user });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'DB error' });
   }
+});
+
+router.post('/logout', (req, res) => {
+  req.session.destroy(() => {
+    res.json({ message: 'Logged out' });
+  });
+});
+
+router.get('/session', (req, res) => {
+  res.json({ user: req.session.user || null });
 });
 
 module.exports = router;
