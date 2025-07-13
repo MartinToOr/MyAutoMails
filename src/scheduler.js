@@ -18,9 +18,11 @@ const transporter = nodemailer.createTransport({
 });
 
 async function checkScripts() {
+  console.log('Scheduler tick', new Date().toISOString());
   try {
-    const { rows } = await pool.query('SELECT * FROM scripts WHERE next_execution <= NOW()');
+    const { rows } = await pool.query("SELECT * FROM scripts WHERE next_execution BETWEEN NOW() - INTERVAL '2 minutes' AND NOW() + INTERVAL '2 minutes'");
     for (const script of rows) {
+      console.log('Running script', script.id);
       const completion = await openai.chat.completions.create({
         model: 'gpt-3.5-turbo',
         messages: [{ role: 'user', content: script.script }],
@@ -43,5 +45,5 @@ async function checkScripts() {
 }
 
 module.exports.start = () => {
-  cron.schedule('* * * * *', checkScripts); // run every minute
+  cron.schedule('*/5 * * * *', checkScripts); // run every 5 minutes
 };

@@ -12,7 +12,19 @@ const translations = {
     dashboardTitle: 'Dashboard',
     welcome: 'Welcome',
     manageScripts: 'Manage Scripts',
-    logout: 'Logout'
+    logout: 'Logout',
+    createScript: 'Create Script',
+    script: 'Script',
+    frequency: 'Frequency',
+    daily: 'Daily',
+    weekly: 'Weekly',
+    monthly: 'Monthly',
+    hour: 'Hour',
+    emails: 'Emails',
+    create: 'Create',
+    myScripts: 'My Scripts',
+    update: 'Update',
+    noScripts: 'No scripts found'
   },
   es: {
     login: 'Iniciar sesión',
@@ -27,7 +39,19 @@ const translations = {
     dashboardTitle: 'Panel',
     welcome: 'Bienvenido',
     manageScripts: 'Gestionar Scripts',
-    logout: 'Cerrar sesión'
+    logout: 'Cerrar sesión',
+    createScript: 'Crear Script',
+    script: 'Script',
+    frequency: 'Frecuencia',
+    daily: 'Diario',
+    weekly: 'Semanal',
+    monthly: 'Mensual',
+    hour: 'Hora',
+    emails: 'Correos',
+    create: 'Crear',
+    myScripts: 'Mis Scripts',
+    update: 'Actualizar',
+    noScripts: 'No hay scripts'
   }
 };
 
@@ -68,6 +92,20 @@ function initDark() {
       setDark(!active);
       btn.textContent = !active ? '☀️' : '🌙';
     });
+  }
+}
+
+async function checkSession(redirect) {
+  try {
+    const res = await fetch('/api/auth/session');
+    const data = await res.json();
+    if (!data.user && redirect) {
+      window.location.href = '/index.html';
+    }
+    return data.user;
+  } catch (e) {
+    if (redirect) window.location.href = '/index.html';
+    return null;
   }
 }
 
