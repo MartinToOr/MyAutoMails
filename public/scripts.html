@@ -9,7 +9,9 @@
 </head>
 <body class="container py-5 fade-in">
   <header>
-    <img src="logo.png" alt="logo">
+
+    <img src="src/logo.png" alt="logo">
+
     <div>
       <select id="langToggle" class="form-select d-inline w-auto me-2">
         <option value="en">EN</option>
@@ -34,7 +36,9 @@
     </div>
     <div class="mb-3">
       <label for="hour" class="form-label" data-i18n="hour">Hour</label>
-      <input type="time" id="hour" class="form-control" value="09:00" step="300" required>
+
+      <input type="time" id="hour" class="form-control" value="09:00" required>
+
     </div>
     <div class="mb-3">
       <label for="emails" class="form-label" data-i18n="emails">Emails</label>
@@ -48,7 +52,9 @@
     checkSession(true);
     document.getElementById('scriptForm').addEventListener('submit', async (e) => {
       e.preventDefault();
+
       const [hourVal, minVal] = document.getElementById('hour').value.split(':');
+
       const res = await fetch('/api/scripts', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -57,6 +63,7 @@
           frequency: document.getElementById('frequency').value,
           hour: parseInt(hourVal, 10),
           minute: parseInt(minVal, 10),
+
           emails: document.getElementById('emails').value
         })
       });
