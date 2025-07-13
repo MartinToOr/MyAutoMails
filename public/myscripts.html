@@ -10,7 +10,7 @@
 <body class="container py-5 fade-in">
   <header>
     <img src="logo.png" alt="logo">
-    <div>
+  <div>
       <select id="langToggle" class="form-select d-inline w-auto me-2">
         <option value="en">EN</option>
         <option value="es">ES</option>
@@ -35,8 +35,13 @@
         return;
       }
       data.forEach(sc => {
+        const details = document.createElement('details');
+        details.className = 'mb-3';
+        const summary = document.createElement('summary');
+        summary.textContent = sc.script.slice(0,30) + (sc.script.length > 30 ? '...' : '');
+        details.appendChild(summary);
         const form = document.createElement('form');
-        form.className = 'mb-4';
+        form.className = 'mt-2';
         form.innerHTML = `
           <div class="mb-2">
             <label class="form-label" data-i18n="script">Script</label>
@@ -52,14 +57,10 @@
           </div>
           <div class="mb-2">
             <label class="form-label" data-i18n="hour">Hour</label>
-
             <div class="d-flex">
               <select name="hour" class="form-select me-2"></select>
               <select name="minute" class="form-select"></select>
             </div>
-
-put type="time" name="hour" class="form-control" step="300" value="${new Date(sc.next_execution).toISOString().substring(11,16)}" required>
-
           </div>
           <div class="mb-2">
             <label class="form-label" data-i18n="emails">Emails</label>
@@ -68,7 +69,6 @@ put type="time" name="hour" class="form-control" step="300" value="${new Date(sc
           <button type="submit" class="btn btn-primary" data-i18n="update">Update</button>
         `;
         form.querySelector('select[name="frequency"]').value = sc.period === 24 ? 'daily' : sc.period === 24*7 ? 'weekly' : 'monthly';
-
         const hourSel = form.querySelector('select[name="hour"]');
         const minSel = form.querySelector('select[name="minute"]');
         for (let h = 0; h < 24; h++) {
@@ -89,26 +89,22 @@ put type="time" name="hour" class="form-control" step="300" value="${new Date(sc
         form.addEventListener('submit', async e => {
           e.preventDefault();
           const fd = new FormData(form);
-          const h = fd.get('hour');
-          const m = fd.get('minute');
-
           await fetch('/api/scripts/' + sc.id, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
               script: fd.get('script'),
               frequency: fd.get('frequency'),
-              hour: parseInt(h,10),
-              minute: parseInt(m,10),
-
+              hour: parseInt(fd.get('hour'), 10),
+              minute: parseInt(fd.get('minute'), 10),
               emails: fd.get('emails'),
               timezone: new Date().getTimezoneOffset()
-
             })
           });
           loadScripts();
         });
-        list.appendChild(form);
+        details.appendChild(form);
+        list.appendChild(details);
       });
       setLang(document.documentElement.lang);
     }
