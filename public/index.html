@@ -36,7 +36,7 @@
   <script>
     checkSession(false).then(user => {
       if (user) {
-        window.location.href = '/dashboard.html';
+        window.location.href = '/myscripts.html';
       }
     });
     document.getElementById('loginForm').addEventListener('submit', async (e) => {
@@ -53,7 +53,7 @@
       const msg = document.getElementById('message');
       if (res.ok) {
         msg.textContent = data.message;
-        window.location.href = '/dashboard.html';
+        window.location.href = '/myscripts.html';
       } else {
         msg.textContent = data.error;
       }

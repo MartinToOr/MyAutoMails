@@ -22,7 +22,6 @@
     </div>
   </header>
   <nav id="sidebar">
-    <a href="/dashboard.html" data-i18n="dashboardTitle">Dashboard</a>
     <a href="/scripts.html" data-i18n="manageScripts">Manage Scripts</a>
     <a href="/myscripts.html" data-i18n="myScripts">My Scripts</a>
     <a href="/history.html" data-i18n="history">History</a>
@@ -31,7 +30,10 @@
     <a href="#" id="logoutLink" data-i18n="logout">Logout</a>
   </nav>
   <div class="container py-5 flex-grow-1">
-  <h1 data-i18n="myScripts" class="mb-4">My Scripts</h1>
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 data-i18n="myScripts" class="m-0">My Scripts</h1>
+    <a href="/scripts.html" class="btn btn-primary">+</a>
+  </div>
   <div id="scriptsList"></div>
   </div>
   <script src="main.js"></script>
@@ -62,6 +64,7 @@
           <div class="mb-2">
             <label class="form-label" data-i18n="script">Script</label>
             <textarea class="form-control" name="script" required maxlength="${limit}">${sc.script}</textarea>
+            <div class="text-end small text-muted char-counter"></div>
           </div>
           <div class="mb-2">
             <label class="form-label" data-i18n="frequency">Frequency</label>
@@ -102,6 +105,13 @@
         const exec = new Date(sc.next_execution);
         hourSel.value = exec.getHours();
         minSel.value = Math.floor(exec.getMinutes() / 5) * 5;
+        const ta = form.querySelector('textarea[name="script"]');
+        const counter = form.querySelector('.char-counter');
+        function updateCounter() {
+          counter.textContent = `${ta.value.length}/${limit}`;
+        }
+        ta.addEventListener('input', updateCounter);
+        updateCounter();
         form.addEventListener('submit', async e => {
           e.preventDefault();
           const fd = new FormData(form);

@@ -11,7 +11,7 @@ const translations = {
     pro: 'Pro',
     dashboardTitle: 'Dashboard',
     welcome: 'Welcome',
-    manageScripts: 'Manage Scripts',
+    manageScripts: 'Create Script',
     logout: 'Logout',
     createScript: 'Create Script',
     script: 'Script',
@@ -33,6 +33,7 @@ const translations = {
     currentPassword: 'Current password',
     newPassword: 'New password',
     deleteAccount: 'Delete account',
+    changePlan: 'Change plan',
 
     create: 'Create',
     myScripts: 'My Scripts',
@@ -55,7 +56,7 @@ const translations = {
     pro: 'Pro',
     dashboardTitle: 'Panel',
     welcome: 'Bienvenido',
-    manageScripts: 'Gestionar Scripts',
+    manageScripts: 'Crear Script',
     logout: 'Cerrar sesión',
     createScript: 'Crear Script',
     script: 'Script',
@@ -77,6 +78,7 @@ const translations = {
     currentPassword: 'Contraseña actual',
     newPassword: 'Nueva contraseña',
     deleteAccount: 'Eliminar cuenta',
+    changePlan: 'Cambiar plan',
 
     create: 'Crear',
     myScripts: 'Mis Scripts',
@@ -135,6 +137,11 @@ function initSidebar() {
   if (sidebar && toggle) {
     toggle.addEventListener('click', () => {
       sidebar.classList.toggle('open');
+    });
+    document.addEventListener('click', (e) => {
+      if (sidebar.classList.contains('open') && !sidebar.contains(e.target) && e.target !== toggle) {
+        sidebar.classList.remove('open');
+      }
     });
   }
 }

@@ -27,7 +27,7 @@ header {
 }
 
 header img {
-  height: 50px;
+  height: 100px;
 }
 
 .dark {
@@ -81,6 +81,8 @@ details summary {
   padding: 1rem;
   background-color: var(--panel-bg);
   border-right: 1px solid #ccc;
+  display: flex;
+  flex-direction: column;
 
   transform: translateX(-220px);
   transition: transform 0.3s ease;
@@ -105,4 +107,9 @@ details summary {
   background-color: var(--panel-bg);
 
   border-color: #333;
+}
+
+#sidebar #logoutLink {
+  margin-top: auto;
+  color: red;
 }

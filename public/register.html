@@ -64,13 +64,19 @@
   <script src="main.js"></script>
   <script>
     checkSession(false).then(user => {
-      if (user) window.location.href = '/dashboard.html';
+      if (user) window.location.href = '/myscripts.html';
     });
 
     const form = document.getElementById('registerForm');
     const formStep = document.getElementById('formStep');
     const planStep = document.getElementById('planStep');
     const priceEl = document.getElementById('price');
+
+    if (window.location.hash === '#plan') {
+      formStep.classList.add('d-none');
+      planStep.classList.remove('d-none');
+      showPrice();
+    }
 
     function showPrice() {
       const locale = navigator.language.startsWith('es') ? 'es-ES' : 'en-US';
@@ -102,7 +108,7 @@
       const msg = document.getElementById('message');
       if (res.status === 201) {
         msg.textContent = data.message;
-        window.location.href = '/dashboard.html';
+        window.location.href = '/myscripts.html';
       } else {
         msg.textContent = data.error;
         formStep.classList.remove('d-none');
