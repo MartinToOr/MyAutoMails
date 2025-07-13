@@ -10,4 +10,6 @@ Simple web app for scheduling OpenAI-powered scripts and emailing the results.
 
 Users can register via `/register.html`; passwords are hashed with bcrypt before being stored. Login is available at `/index.html`.
 
-The scheduler checks every minute for scripts whose `next_execution` is due and sends the generated response to the configured email addresses.
+The scheduler checks every five minutes. If a script's `next_execution` time falls within two minutes of the current time, it triggers a request to OpenAI and mails the response to the specified recipients.
+Script times must be set using minutes in five minute increments (00, 05, 10, ... 55).
+The client sends its timezone offset so scheduled times are normalized to the server's UTC clock.

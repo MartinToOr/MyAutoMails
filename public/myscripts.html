@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title data-i18n="myScripts">My Scripts</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="container py-5 fade-in">
+  <header>
+    <img src="logo.png" alt="logo">
+    <div>
+      <select id="langToggle" class="form-select d-inline w-auto me-2">
+        <option value="en">EN</option>
+        <option value="es">ES</option>
+      </select>
+      <button id="darkToggle" class="btn btn-sm btn-secondary">🌙</button>
+    </div>
+  </header>
+  <h1 data-i18n="myScripts" class="mb-4">My Scripts</h1>
+  <div id="scriptsList"></div>
+  <script src="main.js"></script>
+  <script>
+    async function loadScripts() {
+      const res = await fetch('/api/scripts');
+      const data = await res.json();
+      const list = document.getElementById('scriptsList');
+      list.innerHTML = '';
+      if (!data.length) {
+        const p = document.createElement('p');
+        p.setAttribute('data-i18n', 'noScripts');
+        p.textContent = translations[document.documentElement.lang].noScripts;
+        list.appendChild(p);
+        return;
+      }
+      data.forEach(sc => {
+        const form = document.createElement('form');
+        form.className = 'mb-4';
+        form.innerHTML = `
+          <div class="mb-2">
+            <label class="form-label" data-i18n="script">Script</label>
+            <textarea class="form-control" name="script" required>${sc.script}</textarea>
+          </div>
+          <div class="mb-2">
+            <label class="form-label" data-i18n="frequency">Frequency</label>
+            <select name="frequency" class="form-select">
+              <option value="daily" data-i18n="daily">Daily</option>
+              <option value="weekly" data-i18n="weekly">Weekly</option>
+              <option value="monthly" data-i18n="monthly">Monthly</option>
+            </select>
+          </div>
+          <div class="mb-2">
+            <label class="form-label" data-i18n="hour">Hour</label>
+            <div class="d-flex">
+              <select name="hour" class="form-select me-2"></select>
+              <select name="minute" class="form-select"></select>
+            </div>
+          </div>
+          <div class="mb-2">
+            <label class="form-label" data-i18n="emails">Emails</label>
+            <input type="text" name="emails" class="form-control" value="${sc.emails}" required>
+          </div>
+          <button type="submit" class="btn btn-primary" data-i18n="update">Update</button>
+        `;
+        form.querySelector('select[name="frequency"]').value = sc.period === 24 ? 'daily' : sc.period === 24*7 ? 'weekly' : 'monthly';
+        const hourSel = form.querySelector('select[name="hour"]');
+        const minSel = form.querySelector('select[name="minute"]');
+        for (let h = 0; h < 24; h++) {
+          const opt = document.createElement('option');
+          opt.value = h;
+          opt.textContent = String(h).padStart(2, '0');
+          hourSel.appendChild(opt);
+        }
+        for (let m = 0; m < 60; m += 5) {
+          const opt = document.createElement('option');
+          opt.value = m;
+          opt.textContent = String(m).padStart(2, '0');
+          minSel.appendChild(opt);
+        }
+        const exec = new Date(sc.next_execution);
+        hourSel.value = exec.getHours();
+        minSel.value = Math.floor(exec.getMinutes() / 5) * 5;
+        form.addEventListener('submit', async e => {
+          e.preventDefault();
+          const fd = new FormData(form);
+          const h = fd.get('hour');
+          const m = fd.get('minute');
+          await fetch('/api/scripts/' + sc.id, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              script: fd.get('script'),
+              frequency: fd.get('frequency'),
+              hour: parseInt(h,10),
+              minute: parseInt(m,10),
+              emails: fd.get('emails'),
+              timezone: new Date().getTimezoneOffset()
+            })
+          });
+          loadScripts();
+        });
+        list.appendChild(form);
+      });
+      setLang(document.documentElement.lang);
+    }
+    checkSession(true).then(loadScripts);
+  </script>
+</body>
+</html>
