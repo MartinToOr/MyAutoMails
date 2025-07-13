@@ -122,7 +122,9 @@
       });
       setLang(document.documentElement.lang);
     }
+
     checkSession(true).then(user => { currentUser = user; loadScripts(); });
+
     document.getElementById('logoutLink').addEventListener('click', async e => {
       e.preventDefault();
       await fetch('/api/auth/logout', { method: 'POST' });
