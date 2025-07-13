@@ -19,6 +19,7 @@ router.get('/', async (req, res) => {
 });
 
 router.post('/', async (req, res) => {
+
   const { script, frequency, hour, minute, emails, timezone } = req.body;
   if (minute % 5 !== 0) {
     return res.status(400).json({ error: 'Minute must be multiple of 5' });
@@ -30,6 +31,7 @@ router.post('/', async (req, res) => {
   const now = new Date();
   let next = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(), hour, minute || 0));
   next.setUTCMinutes(next.getUTCMinutes() + offset);
+
   if (next <= now) {
     if (frequency === 'daily') next.setDate(next.getDate() + 1);
     else if (frequency === 'weekly') next.setDate(next.getDate() + 7);
@@ -48,6 +50,7 @@ router.post('/', async (req, res) => {
 });
 
 router.put('/:id', async (req, res) => {
+
   const { script, frequency, hour, minute, emails, timezone } = req.body;
   if (minute % 5 !== 0) {
     return res.status(400).json({ error: 'Minute must be multiple of 5' });
@@ -59,6 +62,7 @@ router.put('/:id', async (req, res) => {
   let next = new Date();
   next = new Date(Date.UTC(next.getUTCFullYear(), next.getUTCMonth(), next.getUTCDate(), hour, minute || 0));
   next.setUTCMinutes(next.getUTCMinutes() + offset);
+
   const now = new Date();
   if (next <= now) {
     if (frequency === 'daily') next.setDate(next.getDate() + 1);
