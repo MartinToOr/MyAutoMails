@@ -22,8 +22,6 @@ const translations = {
     hour: 'Hour',
     emails: 'Emails',
 
-
-
     create: 'Create',
     myScripts: 'My Scripts',
     update: 'Update',

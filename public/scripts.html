@@ -80,8 +80,9 @@
           hour: parseInt(hourVal, 10),
 
           minute: parseInt(minVal, 10),
+          emails: document.getElementById('emails').value,
+          timezone: new Date().getTimezoneOffset()
 
-          emails: document.getElementById('emails').value
         })
       });
       const data = await res.json();

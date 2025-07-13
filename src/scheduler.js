@@ -20,7 +20,8 @@ const transporter = nodemailer.createTransport({
 async function checkScripts() {
 
   const now = new Date();
-  console.log('Scheduler tick', now.toISOString());
+  console.log('Scheduler tick', now.toISOString(), 'offset', now.getTimezoneOffset());
+
   try {
     const { rows } = await pool.query("SELECT * FROM scripts WHERE next_execution BETWEEN NOW() - INTERVAL '2 minutes' AND NOW() + INTERVAL '2 minutes'");
     console.log('Scripts due:', rows.length);

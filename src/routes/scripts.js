@@ -20,18 +20,17 @@ router.get('/', async (req, res) => {
 
 router.post('/', async (req, res) => {
 
-  const { script, frequency, hour, minute, emails } = req.body;
+  const { script, frequency, hour, minute, emails, timezone } = req.body;
   if (minute % 5 !== 0) {
     return res.status(400).json({ error: 'Minute must be multiple of 5' });
   }
-
   const userId = req.session.user.id;
   const periods = { daily: 24, weekly: 24 * 7, monthly: 24 * 30 };
   const period = periods[frequency] || 24;
+  const offset = parseInt(timezone || 0, 10);
   const now = new Date();
-  let next = new Date();
-
-  next.setHours(hour, minute || 0, 0, 0);
+  let next = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(), hour, minute || 0));
+  next.setUTCMinutes(next.getUTCMinutes() + offset);
 
   if (next <= now) {
     if (frequency === 'daily') next.setDate(next.getDate() + 1);
@@ -51,16 +50,19 @@ router.post('/', async (req, res) => {
 });
 
 router.put('/:id', async (req, res) => {
-  const { script, frequency, hour, minute, emails } = req.body;
+
+  const { script, frequency, hour, minute, emails, timezone } = req.body;
   if (minute % 5 !== 0) {
     return res.status(400).json({ error: 'Minute must be multiple of 5' });
   }
-
   const userId = req.session.user.id;
   const periods = { daily: 24, weekly: 24 * 7, monthly: 24 * 30 };
   const period = periods[frequency] || 24;
+  const offset = parseInt(timezone || 0, 10);
   let next = new Date();
-  next.setHours(hour, minute || 0, 0, 0);
+  next = new Date(Date.UTC(next.getUTCFullYear(), next.getUTCMonth(), next.getUTCDate(), hour, minute || 0));
+  next.setUTCMinutes(next.getUTCMinutes() + offset);
+
   const now = new Date();
   if (next <= now) {
     if (frequency === 'daily') next.setDate(next.getDate() + 1);

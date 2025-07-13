@@ -13,4 +13,5 @@ Users can register via `/register.html`; passwords are hashed with bcrypt before
 The scheduler checks every five minutes. If a script's `next_execution` time falls within two minutes of the current time, it triggers a request to OpenAI and mails the response to the specified recipients.
 
 Script times must be set using minutes in five minute increments (00, 05, 10, ... 55).
+The client sends its timezone offset so scheduled times are normalized to the server's UTC clock.
 
