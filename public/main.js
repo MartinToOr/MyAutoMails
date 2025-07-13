@@ -105,6 +105,16 @@ function initDark() {
   }
 }
 
+function initSidebar() {
+  const sidebar = document.getElementById('sidebar');
+  const toggle = document.getElementById('menuToggle');
+  if (sidebar && toggle) {
+    toggle.addEventListener('click', () => {
+      sidebar.classList.toggle('open');
+    });
+  }
+}
+
 async function checkSession(redirect) {
   try {
     const res = await fetch('/api/auth/session');
@@ -122,4 +132,5 @@ async function checkSession(redirect) {
 document.addEventListener('DOMContentLoaded', () => {
   initLang();
   initDark();
+  initSidebar();
 });

@@ -2,11 +2,13 @@
   --bg-color: #f6f8ff;
   --text-color: #000000;
   --primary-color: #0d6efd;
-  --accent-color: #0080ff; /* electric blue */
+
+  --accent-color: #0080ff;
 }
 
 body {
-  background: linear-gradient(135deg, var(--bg-color), #dbe8ff);
+  background-color: var(--bg-color);
+
   color: var(--text-color);
   font-family: Arial, sans-serif;
   transition: background-color 0.3s ease, color 0.3s ease;
@@ -48,29 +50,41 @@ header img {
   from { opacity: 0; transform: translateY(20px); }
   to { opacity: 1; transform: translateY(0); }
 }
+
 .form-control, .form-select, textarea {
   max-width: 500px;
-  background-color: #f4f7ff;
 }
 .dark .form-control, .dark .form-select, .dark textarea {
   background-color: #333;
   color: var(--text-color);
 }
+
 details summary {
   cursor: pointer;
   color: var(--accent-color);
   margin-bottom: 0.5rem;
 }
 
-/* sidebar layout */
-.with-sidebar {
-  display: flex;
-}
+
+/* sidebar */
 #sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+
   width: 200px;
   padding: 1rem;
   background-color: var(--bg-color);
   border-right: 1px solid #ccc;
+
+  transform: translateX(-220px);
+  transition: transform 0.3s ease;
+  z-index: 1000;
+}
+#sidebar.open {
+  transform: translateX(0);
+
 }
 #sidebar a {
   display: block;
