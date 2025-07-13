@@ -3,9 +3,15 @@ const bodyParser = require('body-parser');
 const authRoutes = require('./routes/auth');
 const scriptRoutes = require('./routes/scripts');
 const scheduler = require('./scheduler');
+const session = require('express-session');
 
 const app = express();
 app.use(bodyParser.json());
+app.use(session({
+  secret: process.env.SESSION_SECRET || 'keyboard cat',
+  resave: false,
+  saveUninitialized: false,
+}));
 app.use(express.static('public'));
 
 app.use('/api/auth', authRoutes);
