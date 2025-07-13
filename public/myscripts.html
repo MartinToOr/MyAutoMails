@@ -52,7 +52,13 @@
           </div>
           <div class="mb-2">
             <label class="form-label" data-i18n="hour">Hour</label>
-            <input type="time" name="hour" class="form-control" step="300" value="${new Date(sc.next_execution).toISOString().substring(11,16)}" required>
+
+            <div class="d-flex">
+              <select name="hour" class="form-select me-2"></select>
+              <select name="minute" class="form-select"></select>
+            </div>
+put type="time" name="hour" class="form-control" step="300" value="${new Date(sc.next_execution).toISOString().substring(11,16)}" required>
+
           </div>
           <div class="mb-2">
             <label class="form-label" data-i18n="emails">Emails</label>
@@ -61,10 +67,30 @@
           <button type="submit" class="btn btn-primary" data-i18n="update">Update</button>
         `;
         form.querySelector('select[name="frequency"]').value = sc.period === 24 ? 'daily' : sc.period === 24*7 ? 'weekly' : 'monthly';
+
+        const hourSel = form.querySelector('select[name="hour"]');
+        const minSel = form.querySelector('select[name="minute"]');
+        for (let h = 0; h < 24; h++) {
+          const opt = document.createElement('option');
+          opt.value = h;
+          opt.textContent = String(h).padStart(2, '0');
+          hourSel.appendChild(opt);
+        }
+        for (let m = 0; m < 60; m += 5) {
+          const opt = document.createElement('option');
+          opt.value = m;
+          opt.textContent = String(m).padStart(2, '0');
+          minSel.appendChild(opt);
+        }
+        const exec = new Date(sc.next_execution);
+        hourSel.value = exec.getHours();
+        minSel.value = Math.floor(exec.getMinutes() / 5) * 5;
         form.addEventListener('submit', async e => {
           e.preventDefault();
           const fd = new FormData(form);
-          const [h,m] = fd.get('hour').split(':');
+          const h = fd.get('hour');
+          const m = fd.get('minute');
+
           await fetch('/api/scripts/' + sc.id, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },

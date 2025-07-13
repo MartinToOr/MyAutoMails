@@ -37,7 +37,10 @@
     <div class="mb-3">
       <label for="hour" class="form-label" data-i18n="hour">Hour</label>
 
-      <input type="time" id="hour" class="form-control" value="09:00" step="300" required>
+      <div class="d-flex">
+        <select id="hour" class="form-select me-2"></select>
+        <select id="minute" class="form-select"></select>
+      </div>
 
     </div>
     <div class="mb-3">
@@ -50,10 +53,23 @@
   <script src="main.js"></script>
   <script>
     checkSession(true);
+
+    for (let h = 0; h < 24; h++) {
+      const opt = document.createElement('option');
+      opt.value = h;
+      opt.textContent = String(h).padStart(2, '0');
+      document.getElementById('hour').appendChild(opt);
+    }
+    for (let m = 0; m < 60; m += 5) {
+      const opt = document.createElement('option');
+      opt.value = m;
+      opt.textContent = String(m).padStart(2, '0');
+      document.getElementById('minute').appendChild(opt);
+    }
     document.getElementById('scriptForm').addEventListener('submit', async (e) => {
       e.preventDefault();
-
-      const [hourVal, minVal] = document.getElementById('hour').value.split(':');
+      const hourVal = document.getElementById('hour').value;
+      const minVal = document.getElementById('minute').value;
 
       const res = await fetch('/api/scripts', {
         method: 'POST',
