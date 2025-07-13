@@ -18,6 +18,7 @@ const transporter = nodemailer.createTransport({
 });
 
 async function checkScripts() {
+
   const now = new Date();
   console.log('Scheduler tick', now.toISOString());
   try {
@@ -26,6 +27,7 @@ async function checkScripts() {
     for (const script of rows) {
       const execDate = new Date(script.next_execution);
       console.log('Running script', script.id, 'scheduled for', execDate.toISOString());
+
       const completion = await openai.chat.completions.create({
         model: 'gpt-3.5-turbo',
         messages: [{ role: 'user', content: script.script }],
