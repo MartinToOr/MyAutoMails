@@ -25,7 +25,10 @@ const translations = {
     create: 'Create',
     myScripts: 'My Scripts',
     update: 'Update',
-    noScripts: 'No scripts found'
+    noScripts: 'No scripts found',
+    history: 'History',
+    noHistory: 'No history',
+    test: 'Test'
 
   },
   es: {
@@ -54,7 +57,10 @@ const translations = {
     create: 'Crear',
     myScripts: 'Mis Scripts',
     update: 'Actualizar',
-    noScripts: 'No hay scripts'
+    noScripts: 'No hay scripts',
+    history: 'Historial',
+    noHistory: 'Sin historial',
+    test: 'Probar'
 
   }
 };

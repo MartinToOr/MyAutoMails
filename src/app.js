@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const authRoutes = require('./routes/auth');
 const scriptRoutes = require('./routes/scripts');
+const historyRoutes = require('./routes/history');
 const scheduler = require('./scheduler');
 const session = require('express-session');
 
@@ -16,6 +17,7 @@ app.use(express.static('public'));
 
 app.use('/api/auth', authRoutes);
 app.use('/api/scripts', scriptRoutes);
+app.use('/api/history', historyRoutes);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
