@@ -34,6 +34,7 @@
   </div>
   <script src="main.js"></script>
   <script>
+    let currentUser;
     async function loadScripts() {
       const res = await fetch('/api/scripts');
       const data = await res.json();
@@ -54,10 +55,11 @@
         details.appendChild(summary);
         const form = document.createElement('form');
         form.className = 'mt-2';
+        const limit = currentUser && currentUser.plan === 'pro' ? 600 : 300;
         form.innerHTML = `
           <div class="mb-2">
             <label class="form-label" data-i18n="script">Script</label>
-            <textarea class="form-control" name="script" required>${sc.script}</textarea>
+            <textarea class="form-control" name="script" required maxlength="${limit}">${sc.script}</textarea>
           </div>
           <div class="mb-2">
             <label class="form-label" data-i18n="frequency">Frequency</label>
@@ -120,7 +122,9 @@
       });
       setLang(document.documentElement.lang);
     }
-    checkSession(true).then(loadScripts);
+
+    checkSession(true).then(user => { currentUser = user; loadScripts(); });
+
     document.getElementById('logoutLink').addEventListener('click', async e => {
       e.preventDefault();
       await fetch('/api/auth/logout', { method: 'POST' });

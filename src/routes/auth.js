@@ -13,7 +13,7 @@ router.post('/register', async (req, res) => {
     );
     const { rows } = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
     const user = rows[0];
-    req.session.user = { id: user.id, name: user.name, plan: user.plan };
+    req.session.user = { id: user.id, name: user.name, plan: user.plan, created_at: user.created_at };
     res.status(201).json({ message: 'User registered', user: req.session.user });
   } catch (err) {
     console.error(err);
@@ -29,7 +29,7 @@ router.post('/login', async (req, res) => {
     const user = rows[0];
     const match = await bcrypt.compare(password, user.password);
     if (!match) return res.status(401).json({ error: 'Invalid credentials' });
-    req.session.user = { id: user.id, name: user.name, plan: user.plan };
+    req.session.user = { id: user.id, name: user.name, plan: user.plan, created_at: user.created_at };
     res.json({ message: 'Login successful', user: req.session.user });
   } catch (err) {
     console.error(err);

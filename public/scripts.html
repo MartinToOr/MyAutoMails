@@ -64,7 +64,12 @@
   </div>
   <script src="main.js"></script>
   <script>
-    checkSession(true);
+    checkSession(true).then(user => {
+      const textarea = document.getElementById('script');
+      if (user && textarea) {
+        textarea.maxLength = user.plan === 'pro' ? 600 : 300;
+      }
+    });
 
     for (let h = 0; h < 24; h++) {
       const opt = document.createElement('option');
