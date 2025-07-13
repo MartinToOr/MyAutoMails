@@ -45,9 +45,9 @@ router.post('/test', async (req, res) => {
     }
     const completion = await openai.chat.completions.create({
       model: 'gpt-3.5-turbo',
-
       messages: [
-        { role: 'system', content: 'Responde de forma natural sin mencionar que eres una IA, este mensaje te llegará de forma recurrente cada cierto tiempo, el usuario queie saber periodicamente estos datos. Usa internet si es necesario.' },
+        { role: 'system', content: 'Responde de forma natural sin mencionar que eres una IA. Usa internet si es necesario.' },
+
         { role: 'user', content: script }
       ],
     });
