@@ -27,7 +27,9 @@ async function start() {
     user_id INTEGER NOT NULL REFERENCES users(id),
     run_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
   )`);
+
   await pool.query("ALTER TABLE users ADD COLUMN IF NOT EXISTS created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP");
+
   await pool.query(`CREATE TABLE IF NOT EXISTS email_history (
     id SERIAL PRIMARY KEY,
     user_id INTEGER NOT NULL REFERENCES users(id),

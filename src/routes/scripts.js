@@ -3,10 +3,12 @@ const pool = require('../db');
 const OpenAI = require('openai');
 const router = express.Router();
 
+
 const LIMITS = {
   free: { input: 300, output: 500 },
   pro: { input: 600, output: 0 },
 };
+
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_KEY || 'YOUR_API_KEY',
 });
@@ -30,10 +32,12 @@ router.get('/', async (req, res) => {
 router.post('/test', async (req, res) => {
   const { script } = req.body;
   const userId = req.session.user.id;
+
   const plan = req.session.user.plan || 'free';
   if (script.length > LIMITS[plan].input) {
     return res.status(400).json({ error: 'Script too long' });
   }
+
   try {
     const { rows } = await pool.query("SELECT COUNT(*) FROM test_runs WHERE user_id=$1 AND run_at > NOW() - INTERVAL '1 day'", [userId]);
     if (parseInt(rows[0].count, 10) >= 3) {
@@ -43,6 +47,7 @@ router.post('/test', async (req, res) => {
       model: 'gpt-3.5-turbo',
       messages: [
         { role: 'system', content: 'Responde de forma natural sin mencionar que eres una IA. Usa internet si es necesario.' },
+
         { role: 'user', content: script }
       ],
     });
@@ -50,6 +55,7 @@ router.post('/test', async (req, res) => {
     if (LIMITS[plan].output && answer.length > LIMITS[plan].output) {
       answer = answer.slice(0, LIMITS[plan].output) + '\nActualiza al plan pro para eliminar límites.';
     }
+
     await pool.query('INSERT INTO test_runs(user_id) VALUES ($1)', [userId]);
     res.json({ response: answer });
   } catch (err) {

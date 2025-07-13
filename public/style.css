@@ -1,18 +1,22 @@
 :root {
+
   --bg-start: #ffffff;
   --bg-end: #cce6ff;
   --panel-bg: #f5f7fa;
+
   --text-color: #000000;
   --primary-color: #0d6efd;
   --accent-color: #007bff;
 }
 
 body {
+
   min-height: 100vh;
   background: linear-gradient(to bottom, var(--bg-start), var(--bg-end));
   color: var(--text-color);
   font-family: Arial, sans-serif;
   transition: background 0.3s ease, color 0.3s ease;
+
 }
 
 header {
@@ -30,6 +34,7 @@ header img {
   --bg-start: #000000;
   --bg-end: #00152e;
   --panel-bg: #121212;
+
   --text-color: #ffffff;
 }
 
@@ -71,16 +76,19 @@ details summary {
   top: 0;
   left: 0;
   bottom: 0;
+
   width: 200px;
   padding: 1rem;
   background-color: var(--panel-bg);
   border-right: 1px solid #ccc;
+
   transform: translateX(-220px);
   transition: transform 0.3s ease;
   z-index: 1000;
 }
 #sidebar.open {
   transform: translateX(0);
+
 }
 #sidebar a {
   display: block;
@@ -93,6 +101,8 @@ details summary {
   background-color: var(--accent-color);
 }
 .dark #sidebar {
+
   background-color: var(--panel-bg);
+
   border-color: #333;
 }
