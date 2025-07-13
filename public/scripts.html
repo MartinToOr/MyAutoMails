@@ -22,7 +22,6 @@
     </div>
   </header>
   <nav id="sidebar">
-    <a href="/dashboard.html" data-i18n="dashboardTitle">Dashboard</a>
     <a href="/scripts.html" data-i18n="manageScripts">Manage Scripts</a>
     <a href="/myscripts.html" data-i18n="myScripts">My Scripts</a>
     <a href="/history.html" data-i18n="history">History</a>
@@ -36,6 +35,7 @@
     <div class="mb-3">
       <label for="script" class="form-label" data-i18n="script">Script</label>
       <textarea id="script" class="form-control" required></textarea>
+      <div class="text-end small text-muted" id="charCounter"></div>
       <button type="button" id="testBtn" class="btn btn-secondary mt-2" data-i18n="test">Test</button>
       <pre id="testResult" class="mt-2"></pre>
     </div>
@@ -68,9 +68,16 @@
   <script>
     checkSession(true).then(user => {
       const textarea = document.getElementById('script');
+      const counter = document.getElementById('charCounter');
       if (user && textarea) {
         textarea.maxLength = user.plan === 'pro' ? 600 : 300;
       }
+      function updateCount() {
+        const limit = textarea.maxLength || 0;
+        counter.textContent = `${textarea.value.length}/${limit}`;
+      }
+      textarea.addEventListener('input', updateCount);
+      updateCount();
     });
 
     for (let h = 0; h < 24; h++) {

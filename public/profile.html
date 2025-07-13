@@ -22,7 +22,6 @@
     </div>
   </header>
   <nav id="sidebar">
-    <a href="/dashboard.html" data-i18n="dashboardTitle">Dashboard</a>
     <a href="/scripts.html" data-i18n="manageScripts">Manage Scripts</a>
     <a href="/myscripts.html" data-i18n="myScripts">My Scripts</a>
     <a href="/history.html" data-i18n="history">History</a>
@@ -43,14 +42,14 @@
       <input type="password" id="newPass" class="form-control" required>
       <button type="submit" class="btn btn-primary mt-2" data-i18n="save">Save</button>
     </form>
-    <form id="planForm" class="mb-3">
+    <div class="mb-3">
       <label class="form-label" data-i18n="plan">Plan</label>
-      <select id="plan" class="form-select">
+      <select id="plan" class="form-select" disabled>
         <option value="free" data-i18n="free">Free</option>
         <option value="pro" data-i18n="pro">Pro</option>
       </select>
-      <button type="submit" class="btn btn-primary mt-2" data-i18n="save">Save</button>
-    </form>
+      <a href="/register.html#plan" class="btn btn-primary mt-2" data-i18n="changePlan">Change plan</a>
+    </div>
     <button id="deleteBtn" class="btn btn-danger" data-i18n="deleteAccount">Delete account</button>
   </div>
   <script src="main.js"></script>
@@ -70,11 +69,6 @@
       if (res.ok) alert('Saved');
     });
 
-    document.getElementById('planForm').addEventListener('submit', async e => {
-      e.preventDefault();
-      const res = await fetch('/api/auth/user', { method: 'PUT', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ plan: document.getElementById('plan').value }) });
-      if (res.ok) alert('Saved');
-    });
 
     document.getElementById('deleteBtn').addEventListener('click', async () => {
       if (!confirm('Delete account?')) return;
