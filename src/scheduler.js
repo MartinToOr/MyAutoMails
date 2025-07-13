@@ -40,6 +40,7 @@ async function checkScripts() {
         subject: 'Script result',
         text: answer,
       });
+      await pool.query('INSERT INTO email_history(user_id, script_id, response) VALUES ($1, $2, $3)', [script.user_id, script.id, answer]);
       await pool.query(
         "UPDATE scripts SET next_execution = next_execution + (period * interval '1 hour') WHERE id = $1",
         [script.id]

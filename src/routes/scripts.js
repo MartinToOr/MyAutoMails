@@ -1,6 +1,11 @@
 const express = require('express');
 const pool = require('../db');
+const OpenAI = require('openai');
 const router = express.Router();
+
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_KEY || 'YOUR_API_KEY',
+});
 
 router.use((req, res, next) => {
   if (!req.session.user) {
@@ -15,6 +20,27 @@ router.get('/', async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'DB error' });
+  }
+});
+
+router.post('/test', async (req, res) => {
+  const { script } = req.body;
+  const userId = req.session.user.id;
+  try {
+    const { rows } = await pool.query("SELECT COUNT(*) FROM test_runs WHERE user_id=$1 AND run_at > NOW() - INTERVAL '1 day'", [userId]);
+    if (parseInt(rows[0].count, 10) >= 3) {
+      return res.status(429).json({ error: 'Daily test limit reached' });
+    }
+    const completion = await openai.chat.completions.create({
+      model: 'gpt-3.5-turbo',
+      messages: [{ role: 'user', content: script }],
+    });
+    const answer = completion.choices[0].message.content;
+    await pool.query('INSERT INTO test_runs(user_id) VALUES ($1)', [userId]);
+    res.json({ response: answer });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'OpenAI error' });
   }
 });
 
