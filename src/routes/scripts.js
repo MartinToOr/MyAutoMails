@@ -1,6 +1,15 @@
 const express = require('express');
 const pool = require('../db');
+const OpenAI = require('openai');
 const router = express.Router();
+
+const LIMITS = {
+  free: { input: 300, output: 500 },
+  pro: { input: 600, output: 0 },
+};
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_KEY || 'YOUR_API_KEY',
+});
 
 router.use((req, res, next) => {
   if (!req.session.user) {
@@ -18,6 +27,37 @@ router.get('/', async (req, res) => {
   }
 });
 
+router.post('/test', async (req, res) => {
+  const { script } = req.body;
+  const userId = req.session.user.id;
+  const plan = req.session.user.plan || 'free';
+  if (script.length > LIMITS[plan].input) {
+    return res.status(400).json({ error: 'Script too long' });
+  }
+  try {
+    const { rows } = await pool.query("SELECT COUNT(*) FROM test_runs WHERE user_id=$1 AND run_at > NOW() - INTERVAL '1 day'", [userId]);
+    if (parseInt(rows[0].count, 10) >= 3) {
+      return res.status(429).json({ error: 'Daily test limit reached' });
+    }
+    const completion = await openai.chat.completions.create({
+      model: 'gpt-3.5-turbo',
+      messages: [
+        { role: 'system', content: 'Responde de forma natural sin mencionar que eres una IA. Usa internet si es necesario.' },
+        { role: 'user', content: script }
+      ],
+    });
+    let answer = completion.choices[0].message.content;
+    if (LIMITS[plan].output && answer.length > LIMITS[plan].output) {
+      answer = answer.slice(0, LIMITS[plan].output) + '\nActualiza al plan pro para eliminar límites.';
+    }
+    await pool.query('INSERT INTO test_runs(user_id) VALUES ($1)', [userId]);
+    res.json({ response: answer });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'OpenAI error' });
+  }
+});
+
 router.post('/', async (req, res) => {
 
   const { script, frequency, hour, minute, emails, timezone } = req.body;
@@ -25,6 +65,23 @@ router.post('/', async (req, res) => {
     return res.status(400).json({ error: 'Minute must be multiple of 5' });
   }
   const userId = req.session.user.id;
+  const plan = req.session.user.plan || 'free';
+  if (script.length > LIMITS[plan].input) {
+    return res.status(400).json({ error: 'Script too long' });
+  }
+  if (plan === 'free') {
+    const { rows } = await pool.query('SELECT period FROM scripts WHERE user_id=$1', [userId]);
+    const dailyCount = rows.filter(r => r.period === 24).length;
+    const weeklyCount = rows.filter(r => r.period === 24 * 7).length;
+    if ((frequency === 'daily' && dailyCount >= 1) || (frequency === 'weekly' && weeklyCount >= 1) || frequency === 'monthly') {
+      return res.status(403).json({ error: 'Free plan limit reached' });
+    }
+    const { rows: urows } = await pool.query('SELECT created_at FROM users WHERE id=$1', [userId]);
+    const created = new Date(urows[0].created_at);
+    if (Date.now() - created.getTime() > 90 * 24 * 3600 * 1000) {
+      return res.status(403).json({ error: 'Account expired' });
+    }
+  }
   const periods = { daily: 24, weekly: 24 * 7, monthly: 24 * 30 };
   const period = periods[frequency] || 24;
   const offset = parseInt(timezone || 0, 10);
@@ -56,6 +113,18 @@ router.put('/:id', async (req, res) => {
     return res.status(400).json({ error: 'Minute must be multiple of 5' });
   }
   const userId = req.session.user.id;
+  const plan = req.session.user.plan || 'free';
+  if (script.length > LIMITS[plan].input) {
+    return res.status(400).json({ error: 'Script too long' });
+  }
+  if (plan === 'free') {
+    if (frequency === 'monthly') return res.status(403).json({ error: 'Free plan limit reached' });
+    const { rows: urows } = await pool.query('SELECT created_at FROM users WHERE id=$1', [userId]);
+    const created = new Date(urows[0].created_at);
+    if (Date.now() - created.getTime() > 90 * 24 * 3600 * 1000) {
+      return res.status(403).json({ error: 'Account expired' });
+    }
+  }
   const periods = { daily: 24, weekly: 24 * 7, monthly: 24 * 30 };
   const period = periods[frequency] || 24;
   const offset = parseInt(timezone || 0, 10);
