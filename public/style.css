@@ -2,10 +2,11 @@
   --bg-color: #ffffff;
   --text-color: #000000;
   --primary-color: #0d6efd;
+  --accent-color: #00bfff;
 }
 
 body {
-  background-color: var(--bg-color);
+  background: linear-gradient(to bottom right, var(--bg-color), #e7f3ff);
   color: var(--text-color);
   font-family: Arial, sans-serif;
   transition: background-color 0.3s ease, color 0.3s ease;
@@ -28,8 +29,8 @@ header img {
 }
 
 .btn-primary {
-  background-color: var(--primary-color);
-  border-color: var(--primary-color);
+  background-color: var(--accent-color);
+  border-color: var(--accent-color);
 }
 
 #message {
@@ -43,4 +44,17 @@ header img {
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(20px); }
   to { opacity: 1; transform: translateY(0); }
+}
+.form-control, .form-select, textarea {
+  max-width: 500px;
+  background-color: #f4f7ff;
+}
+.dark .form-control, .dark .form-select, .dark textarea {
+  background-color: #333;
+  color: var(--text-color);
+}
+details summary {
+  cursor: pointer;
+  color: var(--accent-color);
+  margin-bottom: 0.5rem;
 }
