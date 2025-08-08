@@ -122,12 +122,11 @@
         })
       });
       const data = await res.json();
-      document.getElementById('message').textContent = res.ok ? data.message : data.error;
-    });
-    document.getElementById('logoutLink').addEventListener('click', async (e) => {
-      e.preventDefault();
-      await fetch('/api/auth/logout', { method: 'POST' });
-      window.location.href = '/index.html';
+      if (res.ok) {
+        showFeedback(data.message, 'success', '/myscripts.html');
+      } else {
+        showFeedback(data.error, 'danger');
+      }
     });
   </script>
 </body>

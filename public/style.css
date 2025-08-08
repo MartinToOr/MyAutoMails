@@ -45,6 +45,7 @@ header img {
 
 #message {
   margin-top: 1rem;
+  z-index: 2000;
 }
 
 .fade-in {
@@ -68,6 +69,20 @@ details summary {
   cursor: pointer;
   color: var(--accent-color);
   margin-bottom: 0.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+details summary .script-text {
+  flex: 1 1 200px;
+  word-break: break-word;
+}
+
+details summary .next-exec {
+  flex: 0 0 auto;
+  white-space: nowrap;
+  color: var(--text-color);
 }
 
 /* sidebar */
