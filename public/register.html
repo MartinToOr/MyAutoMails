@@ -105,12 +105,10 @@
         })
       });
       const data = await res.json();
-      const msg = document.getElementById('message');
       if (res.status === 201) {
-        msg.textContent = data.message;
-        window.location.href = '/myscripts.html';
+        showFeedback(data.message, 'success', '/myscripts.html');
       } else {
-        msg.textContent = data.error;
+        showFeedback(data.error, 'danger');
         formStep.classList.remove('d-none');
         planStep.classList.add('d-none');
       }
