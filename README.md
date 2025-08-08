@@ -1,6 +1,7 @@
 # MyAutoMails
 
 Simple web app for scheduling OpenAI-powered scripts and emailing the results.
+Uses OpenAI's GPT-4.1-mini model with built-in web search to keep answers current while remaining inexpensive.
 
 ## Setup
 1. Install dependencies with `npm install` (requires internet access).
