@@ -30,15 +30,13 @@ async function checkScripts() {
       console.log('Running script', script.id, 'scheduled for', execDate.toISOString());
 
       const plan = script.plan || 'free';
-      const messages = [
-        { role: 'system', content: 'Responde de forma natural sin mencionar que eres una IA. Usa internet si es necesario.' },
-        { role: 'user', content: script.script },
-      ];
-      const completion = await openai.chat.completions.create({
-        model: 'gpt-4o-mini-realtime-preview',
-        messages,
+      const completion = await openai.responses.create({
+        model: 'gpt-4.1-mini',
+        instructions: 'Responde de forma natural sin mencionar que eres una IA.',
+        input: script.script,
+        tools: [{ type: 'web-browsing' }],
       });
-      let answer = completion.choices[0].message.content;
+      let answer = completion.output_text;
       if (plan === 'free' && answer.length > 500) {
         answer = answer.slice(0, 500) + '\nActualiza al plan pro para eliminar límites.';
       }

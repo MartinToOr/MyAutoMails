@@ -43,15 +43,13 @@ router.post('/test', async (req, res) => {
     if (parseInt(rows[0].count, 10) >= 3) {
       return res.status(429).json({ error: 'Daily test limit reached' });
     }
-    const completion = await openai.chat.completions.create({
-      model: 'gpt-3.5-turbo',
-      messages: [
-        { role: 'system', content: 'Responde de forma natural sin mencionar que eres una IA. Usa internet si es necesario.' },
-
-        { role: 'user', content: script }
-      ],
+    const completion = await openai.responses.create({
+      model: 'gpt-4.1-mini',
+      instructions: 'Responde de forma natural sin mencionar que eres una IA.',
+      input: script,
+      tools: [{ type: 'web-browsing' }],
     });
-    let answer = completion.choices[0].message.content;
+    let answer = completion.output_text;
     if (LIMITS[plan].output && answer.length > LIMITS[plan].output) {
       answer = answer.slice(0, LIMITS[plan].output) + '\nActualiza al plan pro para eliminar límites.';
     }
