@@ -91,6 +91,21 @@ const translations = {
   }
 };
 
+function showFeedback(message, type = 'success', redirect) {
+  let box = document.getElementById('message');
+  if (!box) {
+    box = document.createElement('div');
+    box.id = 'message';
+    document.body.appendChild(box);
+  }
+  box.textContent = message;
+  box.className = `alert alert-${type} position-fixed top-0 start-50 translate-middle-x mt-3 fade show`;
+  setTimeout(() => {
+    box.classList.remove('show');
+    if (redirect) setTimeout(() => (window.location.href = redirect), 500);
+  }, 2000);
+}
+
 function setLang(lang) {
   const dict = translations[lang];
   document.querySelectorAll('[data-i18n]').forEach(el => {
@@ -146,6 +161,22 @@ function initSidebar() {
   }
 }
 
+function initLogout() {
+  const link = document.getElementById('logoutLink');
+  if (link) {
+    link.addEventListener('click', async e => {
+      e.preventDefault();
+      const res = await fetch('/api/auth/logout', { method: 'POST' });
+      if (res.ok) {
+        const msg = document.documentElement.lang === 'es' ? 'Sesión cerrada' : 'Logged out';
+        showFeedback(msg, 'success', '/index.html');
+      } else {
+        showFeedback('Error', 'danger');
+      }
+    });
+  }
+}
+
 async function checkSession(redirect) {
   try {
     const res = await fetch('/api/auth/session');
@@ -164,4 +195,5 @@ document.addEventListener('DOMContentLoaded', () => {
   initLang();
   initDark();
   initSidebar();
+  initLogout();
 });
