@@ -34,7 +34,7 @@ async function checkScripts() {
         model: 'gpt-4.1-mini',
         instructions: 'Responde de forma natural sin mencionar que eres una IA.',
         input: script.script,
-        tools: [{ type: 'web-browsing' }],
+        tools: [{ type: 'web_search_preview' }],
       });
       let answer = completion.output_text;
       if (plan === 'free' && answer.length > 500) {
