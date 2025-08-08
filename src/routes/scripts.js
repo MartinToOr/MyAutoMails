@@ -45,7 +45,7 @@ router.post('/test', async (req, res) => {
     }
     const completion = await openai.responses.create({
       model: 'gpt-4.1-mini',
-      instructions: 'Responde de forma natural sin mencionar que eres una IA.',
+      instructions: 'Responde de forma natural sin mencionar que eres una IA. Usa la fecha actual y prioriza información del día de hoy o hasta tres días atrás.',
       input: script,
       tools: [{ type: 'web_search_preview' }],
     });
