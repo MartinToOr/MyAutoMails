@@ -47,7 +47,7 @@ router.post('/test', async (req, res) => {
       model: 'gpt-4.1-mini',
       instructions: 'Responde de forma natural sin mencionar que eres una IA.',
       input: script,
-      tools: [{ type: 'web-browsing' }],
+      tools: [{ type: 'web_search_preview' }],
     });
     let answer = completion.output_text;
     if (LIMITS[plan].output && answer.length > LIMITS[plan].output) {
